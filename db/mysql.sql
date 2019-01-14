@@ -16,15 +16,27 @@ CREATE TABLE `sys_user` (
   `user_id` bigint NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL COMMENT '用户名',
   `password` varchar(100) COMMENT '密码',
+  `name` varchar(50) COMMENT '姓名',
   `salt` varchar(20) COMMENT '盐',
   `email` varchar(100) COMMENT '邮箱',
   `mobile` varchar(100) COMMENT '手机号',
   `status` tinyint COMMENT '状态  0：禁用   1：正常',
+  `dept_id` bigint(20) COMMENT '部门ID',
   `create_user_id` bigint(20) COMMENT '创建者ID',
   `create_time` datetime COMMENT '创建时间',
   PRIMARY KEY (`user_id`),
   UNIQUE INDEX (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统用户';
+
+-- 部门
+CREATE TABLE `sys_dept` (
+  `dept_id` bigint NOT NULL AUTO_INCREMENT,
+  `parent_id` bigint COMMENT '上级部门ID，一级部门为0',
+  `name` varchar(50) COMMENT '部门名称',
+  `order_num` int COMMENT '排序',
+  `del_flag` tinyint DEFAULT 0 COMMENT '是否删除  -1：已删除  0：正常',
+  PRIMARY KEY (`dept_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='部门管理';
 
 -- 系统用户Token
 CREATE TABLE `sys_user_token` (
@@ -49,6 +61,7 @@ CREATE TABLE `sys_role` (
   `role_id` bigint NOT NULL AUTO_INCREMENT,
   `role_name` varchar(100) COMMENT '角色名称',
   `remark` varchar(100) COMMENT '备注',
+  `dept_id` bigint(20) COMMENT '部门ID',
   `create_user_id` bigint(20) COMMENT '创建者ID',
   `create_time` datetime COMMENT '创建时间',
   PRIMARY KEY (`role_id`)
@@ -61,6 +74,14 @@ CREATE TABLE `sys_user_role` (
   `role_id` bigint COMMENT '角色ID',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户与角色对应关系';
+
+-- 角色与部门对应关系
+CREATE TABLE `sys_role_dept` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `role_id` bigint COMMENT '角色ID',
+  `dept_id` bigint COMMENT '部门ID',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色与部门对应关系';
 
 -- 角色与菜单对应关系
 CREATE TABLE `sys_role_menu` (
@@ -151,8 +172,8 @@ CREATE TABLE `tb_user` (
 
 
 
--- 初始数据 
-INSERT INTO `sys_user` (`user_id`, `username`, `password`, `salt`, `email`, `mobile`, `status`, `create_user_id`, `create_time`) VALUES ('1', 'admin', '9ec9750e709431dad22365cabc5c625482e574c74adaebba7dd02f1129e4ce1d', 'YzcmCZNvbXocrsz9dm8e', 'root@renren.io', '13612345678', '1', '1', '2016-11-11 11:11:11');
+-- 初始数据
+INSERT INTO `sys_user` (`user_id`, `username`, `name`, `password`, `salt`, `email`, `mobile`, `status`, `dept_id`, `create_user_id`, `create_time`) VALUES ('1', 'admin', '管理员', '9ec9750e709431dad22365cabc5c625482e574c74adaebba7dd02f1129e4ce1d', 'YzcmCZNvbXocrsz9dm8e', 'root@renren.io', '13612345678', '1', '1', '1', '2016-11-11 11:11:11');
 
 INSERT INTO `sys_menu`(`menu_id`, `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES (1, 0, '系统管理', NULL, NULL, 0, 'system', 0);
 INSERT INTO `sys_menu`(`menu_id`, `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES (2, 1, '管理员列表', 'sys/user', NULL, 1, 'admin', 1);
@@ -193,7 +214,11 @@ INSERT INTO `schedule_job` (`bean_name`, `method_name`, `params`, `cron_expressi
 INSERT INTO `tb_user` (`username`, `mobile`, `password`, `create_time`) VALUES ('mark', '13612345678', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', '2017-03-23 22:37:41');
 
 
-
+INSERT INTO `sys_dept` (`dept_id`, `parent_id`, `name`, `order_num`, `del_flag`) VALUES ('1', '0', '人人开源集团', '0', '0');
+INSERT INTO `sys_dept` (`dept_id`, `parent_id`, `name`, `order_num`, `del_flag`) VALUES ('2', '1', '长沙分公司', '1', '0');
+INSERT INTO `sys_dept` (`dept_id`, `parent_id`, `name`, `order_num`, `del_flag`) VALUES ('3', '1', '上海分公司', '2', '0');
+INSERT INTO `sys_dept` (`dept_id`, `parent_id`, `name`, `order_num`, `del_flag`) VALUES ('4', '3', '技术部', '0', '0');
+INSERT INTO `sys_dept` (`dept_id`, `parent_id`, `name`, `order_num`, `del_flag`) VALUES ('5', '3', '销售部', '1', '0');
 
 
 
@@ -260,7 +285,7 @@ REFERENCES QRTZ_TRIGGERS(SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP))
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE QRTZ_SIMPROP_TRIGGERS
-  (          
+  (
     SCHED_NAME VARCHAR(120) NOT NULL,
     TRIGGER_NAME VARCHAR(200) NOT NULL,
     TRIGGER_GROUP VARCHAR(200) NOT NULL,
@@ -276,7 +301,7 @@ CREATE TABLE QRTZ_SIMPROP_TRIGGERS
     BOOL_PROP_1 VARCHAR(1) NULL,
     BOOL_PROP_2 VARCHAR(1) NULL,
     PRIMARY KEY (SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP),
-    FOREIGN KEY (SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP) 
+    FOREIGN KEY (SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP)
     REFERENCES QRTZ_TRIGGERS(SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP))
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

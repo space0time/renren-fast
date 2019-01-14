@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * 系统用户
- * 
+ *
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年9月18日 上午9:28:55
@@ -22,7 +22,7 @@ import java.util.List;
 @TableName("sys_user")
 public class SysUserEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * 用户ID
 	 */
@@ -40,6 +40,12 @@ public class SysUserEntity implements Serializable {
 	 */
 	@NotBlank(message="密码不能为空", groups = AddGroup.class)
 	private String password;
+
+	/**
+	 * 姓名
+	 */
+	@NotBlank(message = "姓名不能为空", groups = {AddGroup.class, UpdateGroup.class})
+	private String name;
 
 	/**
 	 * 盐
@@ -62,17 +68,28 @@ public class SysUserEntity implements Serializable {
 	 * 状态  0：禁用   1：正常
 	 */
 	private Integer status;
-	
+
 	/**
 	 * 角色ID列表
 	 */
 	@TableField(exist=false)
 	private List<Long> roleIdList;
-	
+
 	/**
 	 * 创建者ID
 	 */
 	private Long createUserId;
+
+	/**
+	 * 部门id
+	 */
+	private Long deptId;
+
+	/**
+	 * 部门名称
+	 */
+	@TableField(exist=false)
+	private String deptName;
 
 	/**
 	 * 创建时间
@@ -81,7 +98,7 @@ public class SysUserEntity implements Serializable {
 
 	/**
 	 * 设置：
-	 * @param userId 
+	 * @param userId
 	 */
 	public void setUserId(Long userId) {
 		this.userId = userId;
@@ -94,7 +111,7 @@ public class SysUserEntity implements Serializable {
 	public Long getUserId() {
 		return userId;
 	}
-	
+
 	/**
 	 * 设置：用户名
 	 * @param username 用户名
@@ -110,7 +127,7 @@ public class SysUserEntity implements Serializable {
 	public String getUsername() {
 		return username;
 	}
-	
+
 	/**
 	 * 设置：密码
 	 * @param password 密码
@@ -126,7 +143,23 @@ public class SysUserEntity implements Serializable {
 	public String getPassword() {
 		return password;
 	}
-	
+
+	/**
+	 * 设置：姓名
+	 * @param name 姓名
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * 获取：姓名
+	 * @return String
+	 */
+	public String getName() {
+		return name;
+	}
+
 	/**
 	 * 设置：邮箱
 	 * @param email 邮箱
@@ -142,7 +175,7 @@ public class SysUserEntity implements Serializable {
 	public String getEmail() {
 		return email;
 	}
-	
+
 	/**
 	 * 设置：手机号
 	 * @param mobile 手机号
@@ -158,7 +191,7 @@ public class SysUserEntity implements Serializable {
 	public String getMobile() {
 		return mobile;
 	}
-	
+
 	/**
 	 * 设置：状态  0：禁用   1：正常
 	 * @param status 状态  0：禁用   1：正常
@@ -174,7 +207,7 @@ public class SysUserEntity implements Serializable {
 	public Integer getStatus() {
 		return status;
 	}
-	
+
 	/**
 	 * 设置：创建时间
 	 * @param createTime 创建时间
@@ -213,5 +246,21 @@ public class SysUserEntity implements Serializable {
 
 	public void setSalt(String salt) {
 		this.salt = salt;
+	}
+
+	public Long getDeptId() {
+		return deptId;
+	}
+
+	public void setDeptId(Long deptId) {
+		this.deptId = deptId;
+	}
+
+	public String getDeptName() {
+		return deptName;
+	}
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
 	}
 }

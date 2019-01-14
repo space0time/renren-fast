@@ -6,13 +6,14 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * 角色
- * 
+ *
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年9月18日 上午9:27:38
@@ -20,7 +21,7 @@ import java.util.List;
 @TableName("sys_role")
 public class SysRoleEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * 角色ID
 	 */
@@ -37,7 +38,19 @@ public class SysRoleEntity implements Serializable {
 	 * 备注
 	 */
 	private String remark;
-	
+
+	/**
+	 * 部门ID
+	 */
+	@NotNull(message="部门不能为空")
+	private Long deptId;
+
+	/**
+	 * 部门名称
+	 */
+	@TableField(exist=false)
+	private String deptName;
+
 	/**
 	 * 创建者ID
 	 */
@@ -45,7 +58,9 @@ public class SysRoleEntity implements Serializable {
 
 	@TableField(exist=false)
 	private List<Long> menuIdList;
-	
+	@TableField(exist=false)
+	private List<Long> deptIdList;
+
 	/**
 	 * 创建时间
 	 */
@@ -53,7 +68,7 @@ public class SysRoleEntity implements Serializable {
 
 	/**
 	 * 设置：
-	 * @param roleId 
+	 * @param roleId
 	 */
 	public void setRoleId(Long roleId) {
 		this.roleId = roleId;
@@ -66,7 +81,7 @@ public class SysRoleEntity implements Serializable {
 	public Long getRoleId() {
 		return roleId;
 	}
-	
+
 	/**
 	 * 设置：角色名称
 	 * @param roleName 角色名称
@@ -82,7 +97,7 @@ public class SysRoleEntity implements Serializable {
 	public String getRoleName() {
 		return roleName;
 	}
-	
+
 	/**
 	 * 设置：备注
 	 * @param remark 备注
@@ -115,6 +130,30 @@ public class SysRoleEntity implements Serializable {
 		this.menuIdList = menuIdList;
 	}
 
+	public Long getDeptId() {
+		return deptId;
+	}
+
+	public void setDeptId(Long deptId) {
+		this.deptId = deptId;
+	}
+
+	public String getDeptName() {
+		return deptName;
+	}
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+
+	public List<Long> getDeptIdList() {
+		return deptIdList;
+	}
+
+	public void setDeptIdList(List<Long> deptIdList) {
+		this.deptIdList = deptIdList;
+	}
+
 	public Long getCreateUserId() {
 		return createUserId;
 	}
@@ -122,5 +161,5 @@ public class SysRoleEntity implements Serializable {
 	public void setCreateUserId(Long createUserId) {
 		this.createUserId = createUserId;
 	}
-	
+
 }
