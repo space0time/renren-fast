@@ -167,7 +167,31 @@ CREATE TABLE `tb_user` (
   UNIQUE INDEX (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户';
 
+-- 用户组
+CREATE TABLE `sys_usergroup` (
+  `ug_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ug_name` varchar(100) DEFAULT NULL COMMENT '用户组名称',
+  `remark` varchar(100) DEFAULT NULL COMMENT '备注',
+  `dept_id` bigint(20) DEFAULT NULL COMMENT '部门id',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`ug_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='用户组';
 
+-- 用户组角色对应关系
+CREATE TABLE `sys_usergroup_role` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ug_id` bigint(20) DEFAULT NULL COMMENT '用户组id',
+  `role_id` bigint(20) DEFAULT NULL COMMENT '用户id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='用户组角色对应关系';
+
+-- 用户组用户对应关系
+CREATE TABLE `sys_usergroup_user` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ug_id` bigint(20) DEFAULT NULL COMMENT '用户组id',
+  `user_id` bigint(20) DEFAULT NULL COMMENT '用户id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8 COMMENT='用户组用户对应关系';
 
 
 
